@@ -230,14 +230,16 @@ void copy32To16Page(u32 inAddr, u32 x, u32 y)
 	qword_t *gif_packet = aligned_alloc(16, sizeof(qword_t) * 40);
 	qword_t *q = gif_packet;
 
-	PACK_GIFTAG(q, GIF_SET_TAG(8, 1, GIF_PRE_ENABLE, GIF_SET_PRIM(GS_PRIM_SPRITE, 0, 1, 0, 0, 0, 0, 0, 0), GIF_FLG_PACKED, 1),
+	PACK_GIFTAG(q, GIF_SET_TAG(9, 1, GIF_PRE_ENABLE, GIF_SET_PRIM(GS_PRIM_SPRITE, 0, 1, 0, 0, 0, 0, 0, 0), GIF_FLG_PACKED, 1),
 				GIF_REG_AD);
 	q++;
-	PACK_GIFTAG(q, GS_SET_RGBAQ(0, 0, 0, 1, 0), GS_REG_RGBAQ);
+	PACK_GIFTAG(q, GS_SET_RGBAQ(0, 0, 0, 1, 0x3f800000), GS_REG_RGBAQ);
 	q++;
 	PACK_GIFTAG(q, GS_SET_FRAME(FBA / 2048, FBW, GS_PSM_16, 0), GS_REG_FRAME);
 	q++;
 	PACK_GIFTAG(q, GS_SET_TEX0_SMALL(inAddr >> 6, 10, GS_PSM_32, 6, 5, 1, 1), GS_REG_TEX0);
+	q++;
+	PACK_GIFTAG(q, GS_SET_TEXFLUSH(1), GS_REG_TEXFLUSH);
 	q++;
 	PACK_GIFTAG(q, GS_SET_ST(0, 0), GS_REG_ST);
 	q++;
@@ -261,14 +263,16 @@ void copy16To32Page(u32 inAddr)
 	qword_t *gif_packet = aligned_alloc(16, sizeof(qword_t) * 40);
 	qword_t *q = gif_packet;
 
-	PACK_GIFTAG(q, GIF_SET_TAG(8, 1, GIF_PRE_ENABLE, GIF_SET_PRIM(GS_PRIM_SPRITE, 0, 1, 0, 0, 0, 0, 0, 0), GIF_FLG_PACKED, 1),
+	PACK_GIFTAG(q, GIF_SET_TAG(9, 1, GIF_PRE_ENABLE, GIF_SET_PRIM(GS_PRIM_SPRITE, 0, 1, 0, 0, 0, 0, 0, 0), GIF_FLG_PACKED, 1),
 				GIF_REG_AD);
 	q++;
-	PACK_GIFTAG(q, GS_SET_RGBAQ(0, 0, 0, 1, 0), GS_REG_RGBAQ);
+	PACK_GIFTAG(q, GS_SET_RGBAQ(0, 0, 0, 1, 0x3f800000), GS_REG_RGBAQ);
 	q++;
 	PACK_GIFTAG(q, GS_SET_FRAME(temp_vram_buffer / 2048, FBW, GS_PSM_32, 0), GS_REG_FRAME);
 	q++;
 	PACK_GIFTAG(q, GS_SET_TEX0_SMALL(inAddr >> 6, 10, GS_PSM_16, 6, 6, 1, 1), GS_REG_TEX0);
+	q++;
+	PACK_GIFTAG(q, GS_SET_TEXFLUSH(1), GS_REG_TEXFLUSH);
 	q++;
 	PACK_GIFTAG(q, GS_SET_ST(0, 0), GS_REG_ST);
 	q++;
